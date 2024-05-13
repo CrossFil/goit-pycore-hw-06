@@ -8,15 +8,13 @@ class Feild:
         return str(self.value)
 
 class Name(Feild):
-    # def save_name(self, name: str):
-    #     self.name = name
     pass
 
 class Phone(Feild):
     def phone(self, number):
-        if not isinstance(number, str) or not number.isdital() or len(number) != 10:
+        if not isinstance(number, str) or not number.isdigital() or len(number) != 10:
             raise ValueError("Phone number must be a string of 10 digits.")
-        super().__init__(value)
+        super().__init__(number)
 
 
 class Record:
@@ -28,26 +26,26 @@ class Record:
         self.phones.append(Phone(phone))
 
     def remove_phone(self, phone):
-        self.phones.remove(Phone(phone))
+        for p in self.phones:
+            if p.value == phone:
+                self.phones.remove(p)
+                return
+        print(f'Phone number {phone} not fount')
 
     def edit_phone(self, old_phone, new_phone):
-        for phone in self.phones:
-            if phone.value == old_phone:
-                phone.value = new_phone
+        for p in self.phones:
+            if p.value == old_phone:
+                p.value = new_phone
                 break
 
-
-        # index = self.phones.index(Phone(old_phone))
-        # self.phones[index] = Phone(new_phone)
-
     def find_phone(self, number):
-        for phone in self.phones:
-            if phone.value == number:
-                return phone
+        for p in self.phones:
+            if p.value == number:
+                return p
         return None
 
     def __str__(self):
-        return f'Contact name: {self.name.value}, phone: {"; .".join(p.value for p in self.phones)}'
+        return f'Contact name: {self.name.value}, phone: {"; ".join(str(p.value) for p in self.phones)}'
 
 class AddressBook(UserDict):
     def add_record(self, record):
@@ -78,6 +76,7 @@ if __name__ == '__main__':
 
     john = book.find('John')
     john.edit_phone('1234567890', '1112223333')
+    john.remove_phone('5555555555')
     print(john)
 
     found_phone = john.find_phone('5555555555')
